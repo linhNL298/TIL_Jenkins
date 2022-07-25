@@ -24,9 +24,15 @@ Trong task này, bạn cần sử dụng tổng hợp các kiến thức đã h�
 
 - Sử dụng Blue Ocean để theo dõi kết quả
 
-Gợi ý các stage có trong Workflow:
+## Một số gợi ý:
 
-**Parallel: Check code quality và Run test**
+**Filter by name(Regex) trong Jenkins Multibranch Pipeline**:
+
+```config
+(develop|release.*|feature.*|^v(\d+(?:\.\d+)*)$)
+```
+
+**Stage Parallel: Check code quality và Run test**
 
 ```config
 stage ('Integration Code') {
