@@ -17,11 +17,11 @@ Trong task này, bạn cần sử dụng tổng hợp các kiến thức đã h�
 
 ![Single Thread](./images/single_thread.png)
 
-- Sử dụng SonarQube để thực hiện quét code tĩnh
 - Sử dụng docker để build image và upload image lên Docker Hub.
-- Thêm stage deploy ứng dụng trên agent.
+- Thêm stage deploy ứng dụng trên agent:
+  - Deploy bằng docker trên agent
+  - Sử dụng [tham số](https://itnext.io/jenkins-tutorial-part-3-parameterized-pipeline-3898643ac6ad) để tham số hóa các giá trị `host port` khi deploy bằng docker
 - Sử dụng tag để deploy lên môi trường Production
-
 - Sử dụng Blue Ocean để theo dõi kết quả
 
 Gợi ý các stage có trong Workflow:
