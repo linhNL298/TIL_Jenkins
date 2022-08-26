@@ -1,4 +1,4 @@
-# Jenkins Architecture - Task 3
+# Jenkins Architecture - Task 2
 
 ![Overview](./images/docker_dind_intro.png)
 
