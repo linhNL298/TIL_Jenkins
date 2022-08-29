@@ -1,0 +1,75 @@
+version: '3'
+
+# networks:
+#   jenkins:
+
+networks:
+  jenkins:
+    driver: bridge
+
+volumes:
+  jenkins-data:
+  jenkins-docker-certs:
+  docker-graph-storage:
+
+services:
+  # jenkins:
+  #   image: jenkins/jenkins:2.356
+  #   container_name: jenkins-server
+  #   restart: always
+  #   privileged: true
+  #   user: root
+  #   ports:
+  #     - 8080:8080
+  #     - 50000:50000
+  #   environment:
+  #     - DOCKER_TLS_VERIFY=1
+  #     - DOCKER_TLS_CERTDIR=/certs
+  #     # - DOCKER_HOST=tcp://docker:2376
+  #     # - DOCKER_CERT_PATH=/certs/client
+  #   networks:
+  #     - jenkins
+  #   volumes:
+  #     - /var/jenkins_home:/var/jenkins_home
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  jenkins:
+    image: jenkins/jenkins:2.356
+    container_name: jenkins-server
+    restart: always
+    privileged: true
+    user: root
+    ports:
+      - 8080:8080
+      - 50000:50000
+    networks:
+      - jenkins
+    tty: true
+    volumes:
+      - /var/jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      # - jenkins-data:/var/jenkins_home
+      - jenkins-docker-certs:/certs/client:ro
+    environment:
+      - DOCKER_HOST=tcp://docker:2376
+      - DOCKER_CERT_PATH=/certs/client
+      - DOCKER_TLS_VERIFY=1
+
+  jenkins-docker:
+    image: docker:dind
+    privileged: true
+    restart: always
+    networks:
+      jenkins:
+        aliases: 
+          - docker
+    tty: true
+    environment:
+      - DOCKER_TLS_VERIFY=1
+      - DOCKER_TLS_CERTDIR=/certs
+    volumes:
+      # - /var/jenkins_home:/var/jenkins_home
+      - jenkins-data:/var/jenkins_home
+      - jenkins-docker-certs:/certs/client
+      - docker-graph-storage:/var/lib/docker
+    ports:
+      - 2376:2376

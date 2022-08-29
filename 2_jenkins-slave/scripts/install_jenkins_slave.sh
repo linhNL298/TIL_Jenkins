@@ -3,6 +3,7 @@
 #Create jenkins home dir at host
 mkdir -p /var/jenkins_home_slave/.ssh
 cp ./id_rsa.pub /var/jenkins_home_slave/.ssh/authorized_keys
+# cp -v id_rsa.pub authorized_keys /var/jenkins_home_slave/.ssh/
 
 #Change Mode for .ssh dir
 chmod 700 /var/jenkins_home_slave/.ssh

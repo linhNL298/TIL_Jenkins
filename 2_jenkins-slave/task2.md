@@ -35,7 +35,15 @@ Trong task này:
 
 Bạn sẽ sử dụng Docker in Docker làm Dynamic Slave cho Jenkins.
 
-## 2.1. Tạo Docker in Docker container
+## 2.1. [Tạo Docker in Docker container](https://gist.github.com/adelmofilho/5a30a87eaf1cd4a03052f37b516d6714)
+
+> ### Run [docker-compose](./docker/docker-compose.yml) để khởi tạo **jenkins-server** và **jenkins-docker** với network __docker_jenkins__
+
+```diff
++  docker-compose up -d
+```
+
+> ### Hoặc run docker theo steps
 
 Trên máy chủ chạy jenkins server, thực hiện tạo docker network và cài đặt Docker in Docker bằng image `docker:dind`
 
@@ -84,11 +92,11 @@ docker network inspect jenkins
 
 - Các giá trị của các trường trong credential thu được từ các lệnh.
 
-| Trường                | Kết quả của lệnh chạy trên host                       |
-|-----------------------|-------------------------------------------------------|
-| Client Key            | docker exec jenkins-docker cat /certs/client/key.pem  |
-| Client Certificate    | docker exec jenkins-docker cat /certs/client/cert.pem |
-| Server CA Certificate | docker exec jenkins-docker cat /certs/server/ca.pem   |
+| Trường                | Kết quả của lệnh chạy trên host                       | Syntax
+|-----------------------|-------------------------------------------------------|----------------
+| Client Key            | docker exec jenkins-docker cat /certs/client/key.pem  | docker exec container-name_of_jenkins-docker cat /certs/client/key.pem
+| Client Certificate    | docker exec jenkins-docker cat /certs/client/cert.pem | docker exec container-name_of_jenkins-docker cat /certs/client/cert.pem
+| Server CA Certificate | docker exec jenkins-docker cat /certs/server/ca.pem   | docker exec container-name_of_jenkins-docker cat /certs/server/ca.pem
 | ID                    | jenkins-docker-cert                                   |
 | Description           | Jenkins Docker Cert                                   |
 
