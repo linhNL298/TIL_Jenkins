@@ -10,6 +10,10 @@ Trong task này bạn sẽ nắm vững:
       
 ## 1. Thiết lập Repository và Github
 
+### 1.0 Clone repository [react-for-demo](https://github.com/HoangPhu98/react-for-demo)
+
+> https://github.com/quanhieu/TIL_Jenkins_React
+
 ### 1.1. Chuyển mode của repository
 
 - Mở Github truy cập vào repo của bạn -> Click **settings** -> đưa màn hình xuống phần **Danger Zone** -> Click **Change visibility** -> Chọn **Make private** -> Nhập tên repo -> Click **I understand, change repository visibility**
@@ -86,3 +90,12 @@ Tham khảo Jenkinsfile trong **task 3** này.
 ## 4. Yêu cầu kết quả
 
 Chụp lại màn hình kết quả chạy Job Build và console output.
+
+
+# Trouble Shooting
+
+```diff
+- Got permission denied while trying to connect to the Docker daemon socket
+
+# Cấp quyền thực thi cho Docker daemon socket -> jenkins-slave
+sudo chmod 666 /var/run/docker.sock

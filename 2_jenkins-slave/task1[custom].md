@@ -96,8 +96,13 @@ mkdir -p /var/jenkins_home/.ssh
 # Add Jenkins Slave là trusted servers trên Jenkins Master, 
 # trong ví dụ này, jenkins_slave_node_ip = 10.0.2.15
 ssh-keyscan -p2222 <jenkins_slave_node_ip> > /var/jenkins_home/.ssh/known_hosts
-as
+as ->
 ssh-keyscan -p2222 10.0.2.15 > /var/jenkins_home/.ssh/known_hosts
+```
+
+```
+# Cấp quyền thực thi cho Docker daemon socket
+sudo chmod 666 /var/run/docker.sock
 ```
 
 ## 2. Thêm Jenkins Slave node trên Jenkins Master
