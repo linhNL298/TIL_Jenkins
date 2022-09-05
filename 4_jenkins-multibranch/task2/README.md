@@ -14,7 +14,7 @@ Docker credential cấu tạo từ 3 thành phần: username, password, và regi
 - Nhập **ID** là giá trị trong bảng dưới đây
 - Nhập **Secret** là giá trị của thành phần tương ứng.
 
-| ID | Mô tả  | Example | Syntax
+| ID | Mô tả  | Secret-Example | Secret-Syntax
 |--|--|--|--|
 | DOCKER_REGISTRY_USERNAME | Username để xác thực với Docker Registry | hieu_username | username
 | DOCKER_REGISTRY_PASSWORD| Password để xác thực với Docker Registry |  password_docker_hub | password

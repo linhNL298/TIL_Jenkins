@@ -11,7 +11,9 @@ Yêu cầu:
 #### 1.1. Cấu hình GitHub Server  
 
 - Truy cập vào Repo github của bạn -> Click **Settings** -> Click **Webhooks*
-- Điền **PayloadURL**: `http://<jenkins_server>/github-webhook/`
+- Điền **PayloadURL**: `http://<jenkins_server_ip>/github-webhook/`
+    + Use Jenkin_server Ip
+    + Or Public Jenkin Ip by ngrok as `https://c88c-14-186-192-169.ap.ngrok.io/github-webhook/`
 - Chọn **Content type**: `application/json`
 - Click **Add webhook**
 
