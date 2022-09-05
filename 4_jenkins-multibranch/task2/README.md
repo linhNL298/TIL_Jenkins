@@ -14,11 +14,12 @@ Docker credential cấu tạo từ 3 thành phần: username, password, và regi
 - Nhập **ID** là giá trị trong bảng dưới đây
 - Nhập **Secret** là giá trị của thành phần tương ứng.
 
-| ID | Mô tả  |
-|--|--|
-| DOCKER_REGISTRY_USERNAME | Username để xác thực với Docker Registry |
-| DOCKER_REGISTRY_PASSWORD| Password để xác thực với Docker Registry |
-| DOCKER_REGISTRY_NAME| Tên của Registry |
+| ID | Mô tả  | Example | Syntax
+|--|--|--|--|
+| DOCKER_REGISTRY_USERNAME | Username để xác thực với Docker Registry | hieu_username | username
+| DOCKER_REGISTRY_PASSWORD| Password để xác thực với Docker Registry |  password_docker_hub | password
+| DOCKER_REGISTRY_NAME| Tên của Registry | docker.io/hieu_username | domainRegistry/username
+<!-- domainRegistry/username/repository:tag -->
 
 ![Cred Docker](../images/cred_docker_name.png)
 
