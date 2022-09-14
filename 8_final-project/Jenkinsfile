@@ -5,8 +5,22 @@ pipeline {
     DOCKER_REGISTRY_USERNAME    = credentials('DOCKER_REGISTRY_USERNAME')
     DOCKER_REGISTRY_PASSWORD    = credentials('DOCKER_REGISTRY_PASSWORD')
   }
+  options {
+    // This is required if you want to clean before build
+    skipDefaultCheckout(true)
+  }
 
   stages {
+    stage ('Clear old build') {
+      steps {
+        // Clean before build
+        cleanWs()
+        // We need to explicitly checkout from SCM here
+        checkout scm
+        echo "Clean before build done!!!"
+      }
+    }
+
     stage ('Integration Code') {
       parallel {
         stage ('Code Quality') {
@@ -182,5 +196,17 @@ pipeline {
         '''
       }
     }
+  }
+
+  post {
+    // Clean after build
+    always {
+      cleanWs(cleanWhenNotBuilt: false,
+              deleteDirs: true,
+              disableDeferredWipeout: true,
+              notFailBuild: true,
+              patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
+                          [pattern: '.propsfile', type: 'EXCLUDE']])
+   }
   }
 }

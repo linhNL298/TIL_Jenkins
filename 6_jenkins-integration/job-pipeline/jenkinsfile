@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    options {
+        // This is required if you want to clean before build
+        skipDefaultCheckout(true)
+    }
+    
+    stages {
+        stage('SCM') {
+            steps {
+                cleanWs()
+                git branch: 'master',
+                //The repository containing the sonar-project.properties
+                url: 'https://github.com/edsherwin/simple-node-js-react-npm-app.git'
+            }
+        }
+        stage('build and scanner') {
+            steps {
+                script {
+                        def scannerHome = tool 'sonar_scanner';
+                        withSonarQubeEnv('sonar') {
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=reactapp -Dsonar.projectName=reactapp"
+                   }
+               }
+                
+            }
+        }
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
+                    // true = set pipeline to UNSTABLE, false = don't
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+    }
+}

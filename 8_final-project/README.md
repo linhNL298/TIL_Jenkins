@@ -4,7 +4,7 @@
 
 Trong task này, bạn cần sử dụng tổng hợp các kiến thức đã học để xây dựng một Multibranch Pipeline đáp ứng mô hình sau:
 
-- Source code ReactJS sử dụng cho task: https://github.com/HoangPhu98/react-for-demo
+- Source code ReactJS sử dụng cho task: <https://github.com/HoangPhu98/react-for-demo>
 - Xây dựng Multibranch Pipeline, có webhook từ GitHub, workflow như sau
   - Nhánh `feature.*` có tích hợp code: chạy test và quét code tĩnh với SonarQube
   - Nhánh `develop` cho phép build và deploy ứng dụng tới môi trường DEV
@@ -24,7 +24,7 @@ Trong task này, bạn cần sử dụng tổng hợp các kiến thức đã h�
 - Sử dụng tag để deploy lên môi trường Production
 - Sử dụng Blue Ocean để theo dõi kết quả
 
-## Một số gợi ý:
+## Một số gợi ý
 
 **Filter by name(Regex) trong Jenkins Multibranch Pipeline**:
 
@@ -100,6 +100,7 @@ stage ('Integration Code') {
 ```
 
 **Build stage**:
+
 - Lựa nhánh: chỉ có nhánh `develop`, `release` và tag có định dạng `v<number>.<number>.<number>` được phép build code.
 
 ```config
@@ -113,6 +114,7 @@ stage ('Integration Code') {
 ```
 
 **Deploy stage**:
+
 - Deploy cho nhánh `develop`, `release` và **tag**.
 
 ```config
@@ -132,5 +134,86 @@ stage ('Integration Code') {
 | branch: `release` | Stg         | stg-<build_number>             | stg-6           | 30090      |
 | `tag`             | Prd         | v\<number>.\<number>.\<number> | v1.0.1          | 30100      |
 
-
 ## Kết quả
+
+...
+
+## Trouble Shooting
+
+### Jenkins **Disk space is too low**
+
+![Disk space is too low](./images/disk_space_low.jpg)
+
+> Exec to container **Jenkins-slave**
+
+```
+docker exec it <jenkins_slave_container_id> sh
+
+df -h
+```
+
+![Disk space is too low](./images/disk_space_low_2.jpg)
+
+Or
+
+![Disk space is too low](./images/disk_space_low_4.jpg)
+
+> ## Manual Clean workspace
+
+but not clear **workspaces.txt**
+
+[Read more](https://stackoverflow.com/questions/10325982/how-to-solve-jenkins-disk-space-is-too-low-issue/42220105#42220105)
+
+```
+docker exec it <jenkins_slave_container_id> sh
+
+cd /var/jenkins_home/workspace
+
+rm -rf folder_build
+
+ls
+
+exit
+```
+
+![Disk space is too low](./images/disk_space_low_3.jpg)
+
+> ## Auto clean workspace with [Workspace Cleanup](https://plugins.jenkins.io/ws-cleanup/)
+
+Vào  **Manage Jenkins** => **Plugin Manager**  tìm tới phần **Available** => Add **Workspace Cleanup** chọn **Install without restart**.
+
+### Setup jenkins file include options
+
+```
+options {
+  // This is required if you want to clean before build
+  skipDefaultCheckout(true)
+}
+```
+
+```
+stage ('Clear old build') {
+    steps {
+      // Clean before build
+      cleanWs()
+      // We need to explicitly checkout from SCM here
+      checkout scm
+      echo "Clean before build done!!!"
+    }
+  }
+}
+```
+
+```
+post {
+  // Clean after build
+  always {
+    cleanWs(cleanWhenNotBuilt: false,
+            deleteDirs: true,
+            disableDeferredWipeout: true,
+            notFailBuild: true,
+            patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
+                        [pattern: '.propsfile', type: 'EXCLUDE']])
+  }
+}
+```

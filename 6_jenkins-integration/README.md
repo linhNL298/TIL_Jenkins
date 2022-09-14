@@ -119,3 +119,97 @@ $ docker ps | egrep "sonar|postgres"
 
 ![SonarQube pass result](./images/sonar_result_2.png)
 
+## Trouble Shooting
+
+### SonarQube task ‘TASK_ID’ status is ‘PENDING’ in Jenkins
+
+[Read more](https://community.sonarsource.com/t/sonarqube-quality-gate-is-timing-out-in-jenkins-sonarqube-task-akc-qlno-status-is-pending/69827)
+
+[Read more...](https://github.com/luisaveiro/localhost-sonarqube/issues/5#issuecomment-766192504)
+
+[Read more...](https://community.sonarsource.com/t/sonarqube-task-axbndavuxzc94hetwt6q-status-is-pending-in-jenkins/20484/13)
+
+
+Jenkin **Code Quality Check** is pendding long time
+
+![SonarQube is PENDING](./images/sonar_qube_pending.png)
+
+Sonar-quebe **webhooks** is not recieved reponse
+
+![SonarQube is PENDING](./images/sonar_qube_pending_3.png)
+
+
+> ### Fix this issue
+
+Check device ID by **`ifconfig`**
+
+Update jenkins
+> Change **localhost** to **Device_IP** at **Manage Jenkins** -> **Configure System**
+
+![SonarQube is PENDING](./images/sonar_qube_pending_1.png)
+
+and
+
+![SonarQube is PENDING](./images/sonar_qube_pending_2.png)
+
+Update **localhost** to **Device_IP** in **webhooks** Sonar-qube
+
+> **SonarQube server** => **Administration** => **Configuration** => **Webhooks** 
+
+```
+	http://device_id:8080/sonarqube-webhook/
+```
+
+![SonarQube is PENDING](./images/sonar_qube_pending_4.png)
+
+> Test this job
+
+> **New Item** => Enter item name and choice **Pipeline** job => OK
+
+[Parse this script](./job-pipeline/jenkinsfile)
+
+```config
+pipeline {
+    agent any
+
+    options {
+        // This is required if you want to clean before build
+        skipDefaultCheckout(true)
+    }
+    
+    stages {
+        stage('SCM') {
+            steps {
+                cleanWs()
+                git branch: 'master',
+                //The repository containing the sonar-project.properties
+                url: 'https://github.com/edsherwin/simple-node-js-react-npm-app.git'
+            }
+        }
+        stage('build and scanner') {
+            steps {
+                script {
+                        def scannerHome = tool 'sonar_scanner';
+                        withSonarQubeEnv('sonar') {
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=reactapp -Dsonar.projectName=reactapp"
+                   }
+               }
+                
+            }
+        }
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
+                    // true = set pipeline to UNSTABLE, false = don't
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+    }
+}
+```
+
+=> Apply => Save => Build Now
+
+![SonarQube is PENDING](./images/sonar_qube_pending_5.png)
